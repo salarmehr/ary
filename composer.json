@@ -5,11 +5,13 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Reza",
+      "name": "Reza Salarmehr",
       "email": "salarmehr@gmail.com"
     }
   ],
-  "require": {},
+  "require": {
+    "php": ">=5.4.0"
+  },
   "autoload": {
     "psr-4": {
       "Salarmehr\\": "src/"
