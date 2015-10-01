@@ -1,0 +1,21 @@
+{
+  "name": "salarmehr/ary",
+  "description": "A php array/stdClass alternative to store configs, options and more.",
+  "type": "Utility",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Reza",
+      "email": "salarmehr@gmail.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Salarmehr\\": "src/"
+    },
+    "files":[
+      "src/helper.php"
+    ]
+  }
+}
