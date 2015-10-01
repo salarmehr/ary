@@ -21,8 +21,8 @@ $ary = ary(2, 4, 6, 8); //or
 $ary = ary([2, 4, 6, 8]); //or
 
 $ary = ary(['x' => 'foo', 'y' => 'bar']);
-$foo = $ary->foo; //or
-$foo = $ary['foo'];
+$foo = $ary->x; //or
+$foo = $ary['x'];
 
 $missed = $ary->get('missed', 'Default value');
 
