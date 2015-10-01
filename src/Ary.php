@@ -1,8 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created Reza Salarmehr.
  *
- * Inspired by Laravel Collection and Arr class.
+ * Some methods are from Laravel source code.
  *
  * Date: 18/09/2015
  * Time: 22:37

@@ -6,6 +6,9 @@ Are you tired from casting objects and array to each other? Ary is a light class
 2. You will get `null` if an index does not exists. 
 3. You can specify a default value for a missing index. 
 
+* The class (`Ary()`) requires PHP 5.4 or newer.
+* The helper function (`ary()`) requires PHP 5.6 or newer. 
+
 ~~~~~
 // instantiation
 $ary = new Ary();
