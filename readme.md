@@ -12,7 +12,7 @@ $ary = new Ary();
 // or simply
 $ary = ary();
 
-// filling ary
+//setting and getting array items.
 
 $ary = ary(2, 4, 6, 8); //or
 $ary = ary([2, 4, 6, 8]); //or
@@ -22,6 +22,9 @@ $foo = $ary->foo; //or
 $foo = $ary['foo'];
 
 $missed = $ary->get('missed', 'Default value');
+
+$ary->newItem=20; //or
+$ary['newItem']=20;
 
 count($ary); //returns 3
 $ary->all(); // returns simple php array;
