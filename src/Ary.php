@@ -58,7 +58,12 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
         if ($items instanceof self) {
             return $items->all();
         }
-
+        if (method_exists($items, 'toArray')) {
+            return $items->toArray();
+        }
+        if ($items instanceof JsonSerializable) {
+            return json_decode(json_encode($items), true);
+        }
         return (array)$items;
     }
 
@@ -122,6 +127,17 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     public function toArray()
     {
         return $this->all();
+    }
+
+    /**
+     * Merge the collection with the given items.
+     *
+     * @param  mixed $items
+     * @return static
+     */
+    public function merge($items)
+    {
+        return new static(array_merge($this->items, $this->getArrayableItems($items)));
     }
 
     /**
@@ -240,5 +256,15 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     public function has($key)
     {
         return $this->offsetExists($key);
+    }
+
+    /**
+     * Get the collection of items as a plain object.
+     *
+     * @return object
+     */
+    public function toObject()
+    {
+        return (object)$this->all();
     }
 }
