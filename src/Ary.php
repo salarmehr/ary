@@ -1,6 +1,6 @@
 <?php
 /**
- * Created Reza Salarmehr.
+ * Created by Reza Salarmehr.
  *
  * Some methods are from Laravel source code.
  *
@@ -82,6 +82,11 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
         return $this->get($item);
     }
 
+    public function __set($name, $value)
+    {
+        $this->offsetSet($name, $value);
+    }
+
     /**
      * Get an item from the collection by key.
      *
@@ -107,6 +112,23 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     public function offsetExists($key)
     {
         return array_key_exists($key, $this->items);
+    }
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_null($key)) {
+            $this->items[] = $value;
+        }
+        else {
+            $this->items[$key] = $value;
+        }
     }
 
     /**
@@ -183,23 +205,6 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     }
 
     /**
-     * Set the item at a given offset.
-     *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function offsetSet($key, $value)
-    {
-        if (is_null($key)) {
-            $this->items[] = $value;
-        }
-        else {
-            $this->items[$key] = $value;
-        }
-    }
-
-    /**
      * Unset the item at a given offset.
      *
      * @param  string $key
@@ -267,4 +272,15 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     {
         return (object)$this->all();
     }
+
+
+//    /**
+//     * sets a nested ary.
+//     * @param $key
+//     * @param $items
+//     */
+//    public function setAry($key, $items)
+//    {
+//        $this->items[$key] = new self($items);
+//    }
 }
