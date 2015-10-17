@@ -16,7 +16,7 @@
     "psr-4": {
       "Salarmehr\\": "src/"
     },
-    "files":[
+    "files": [
       "src/helper.php"
     ]
   }

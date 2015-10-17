@@ -10,14 +10,7 @@
 
 namespace Salarmehr;
 
-use ArrayAccess;
-use ArrayIterator;
-use CachingIterator;
-use Countable;
-use IteratorAggregate;
-use JsonSerializable;
-
-class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable
 {
 
     /**
@@ -25,7 +18,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      *
      * @var array
      */
-    protected $items = [];
+//    protected $items = [];
 
     /**
      * Create a new collection.
@@ -36,15 +29,13 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     public function __construct()
     {
         $items = func_get_args();
-        if (count($items) == 0) {
-            $this->items = [];
+        if (count($items) === 0) {
+            $items = [];
         }
-        elseif (count($items) > 1) {
-            $this->items = $items;
+        elseif (count($items) === 1) {
+            $items = is_array($items[0]) ? $items[0] : $this->getArrayableItems($items[0]);
         }
-        else {
-            $this->items = is_array($items[0]) ? $items[0] : $this->getArrayableItems($items[0]);
-        }
+        parent::__construct($items);
     }
 
     /**
@@ -61,7 +52,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
         if (method_exists($items, 'toArray')) {
             return $items->toArray();
         }
-        if ($items instanceof JsonSerializable) {
+        if ($items instanceof \JsonSerializable) {
             return json_decode(json_encode($items), true);
         }
         return (array)$items;
@@ -74,7 +65,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      */
     public function all()
     {
-        return $this->items;
+        return $this->getArrayCopy();
     }
 
     public function &__get($item)
@@ -97,38 +88,22 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     public function &get($key, $default = null)
     {
         if ($this->offsetExists($key)) {
-            return $this->items[$key];
+
+            return $this[$key];
         }
 
         return $default;
     }
 
     /**
-     * Determine if an item exists at an offset.
+     * Get an item at a given offset.
      *
      * @param  mixed $key
-     * @return bool
+     * @return mixed
      */
-    public function offsetExists($key)
+    public function offsetGet($key)
     {
-        return array_key_exists($key, $this->items);
-    }
-
-    /**
-     * Set the item at a given offset.
-     *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function offsetSet($key, $value)
-    {
-        if (is_null($key)) {
-            $this->items[] = $value;
-        }
-        else {
-            $this->items[$key] = $value;
-        }
+        return $this->get($key);
     }
 
     /**
@@ -138,7 +113,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      */
     public function jsonSerialize()
     {
-        return $this->toArray();
+        return $this->jsonSerialize();
     }
 
     /**
@@ -159,60 +134,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      */
     public function merge($items)
     {
-        return new static(array_merge($this->items, $this->getArrayableItems($items)));
-    }
-
-    /**
-     * Get a CachingIterator instance.
-     *
-     * @param  int $flags
-     * @return \CachingIterator
-     */
-    public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
-    {
-        return new CachingIterator($this->getIterator(), $flags);
-    }
-
-    /**
-     * Get an iterator for the items.
-     *
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->items);
-    }
-
-    /**
-     * Count the number of items in the collection.
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->items);
-    }
-
-    /**
-     * Get an item at a given offset.
-     *
-     * @param  mixed $key
-     * @return mixed
-     */
-    public function offsetGet($key)
-    {
-        return $this->get($key);
-    }
-
-    /**
-     * Unset the item at a given offset.
-     *
-     * @param  string $key
-     * @return void
-     */
-    public function offsetUnset($key)
-    {
-        unset($this->items[$key]);
+        return new static(array_merge($this->getArrayCopy(), $this->getArrayableItems($items)));
     }
 
     /**
@@ -233,7 +155,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      */
     public function toJson($options = 0)
     {
-        return json_encode($this->toArray(), $options);
+        return json_encode($this->all(), $options);
     }
 
     /**
@@ -273,14 +195,4 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
         return (object)$this->all();
     }
 
-
-//    /**
-//     * sets a nested ary.
-//     * @param $key
-//     * @param $items
-//     */
-//    public function setAry($key, $items)
-//    {
-//        $this->items[$key] = new self($items);
-//    }
 }
