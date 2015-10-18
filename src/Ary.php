@@ -10,7 +10,7 @@
 
 namespace Salarmehr;
 
-class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable
+class Ary implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable
 {
 
     /**
@@ -36,7 +36,6 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
             $items = is_array($items[0]) ? $items[0] : $this->getArrayableItems($items[0]);
         }
         $this->items = $items;
-        parent::__construct($items);
     }
 
     /**
@@ -66,7 +65,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
      */
     public function all()
     {
-        return $this->getArrayCopy();
+        return $this->items;
     }
 
     public function &__get($item)
@@ -93,6 +92,34 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
             return $this->items[$key];
         }
         return $default;
+    }
+
+    /**
+     * Determine if an item exists at an offset.
+     *
+     * @param  mixed $key
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return array_key_exists($key, $this->items);
+    }
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  mixed $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_null($key)) {
+            $this->items[] = $value;
+        }
+        else {
+            $this->items[$key] = $value;
+        }
     }
 
     /**
@@ -134,7 +161,49 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
      */
     public function merge($items)
     {
-        return new static(array_merge($this->getArrayCopy(), $this->getArrayableItems($items)));
+        return new static(array_merge($this->items, $this->getArrayableItems($items)));
+    }
+
+    /**
+     * Get a CachingIterator instance.
+     *
+     * @param  int $flags
+     * @return \CachingIterator
+     */
+    public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
+    {
+        return new CachingIterator($this->getIterator(), $flags);
+    }
+
+    /**
+     * Get an iterator for the items.
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->items);
+    }
+
+    /**
+     * Count the number of items in the collection.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->items);
+    }
+
+    /**
+     * Unset the item at a given offset.
+     *
+     * @param  string $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->items[$key]);
     }
 
     /**
@@ -142,6 +211,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
      *
      * @return string
      */
+
     public function __toString()
     {
         return $this->toJson();
@@ -204,6 +274,6 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
      */
     public function search($value, $strict = false)
     {
-        return array_search($value, $this->getArrayCopy(), $strict);
+        return array_search($value, $this->items, $strict);
     }
 }
