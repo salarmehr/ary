@@ -88,10 +88,8 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
     public function &get($key, $default = null)
     {
         if ($this->offsetExists($key)) {
-
-            return $this[$key];
+            return $this->getArrayCopy()[$key];
         }
-
         return $default;
     }
 
@@ -194,5 +192,19 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
     {
         return (object)$this->all();
     }
+
+    /**
+     * Search the ary for a given value and return the corresponding key if successful.
+     *
+     * @param  mixed $value
+     * @param  bool $strict
+     * @return mixed
+     */
+    public function search($value, $strict = false)
+    {
+        return array_search($value, $this->getArrayCopy(), $strict);
+
+    }
+
 
 }

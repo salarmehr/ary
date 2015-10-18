@@ -6,9 +6,10 @@
  * Date: 2015/10/15
  * Time: 11:12 AM
  */
-use salarmehr\ary;
 
-require '..\src\Ary.php';
+use \Salarmehr\Ary;
+
+require __DIR__ . '/../src/Ary.php';
 
 class Test extends PHPUnit_Framework_TestCase
 {
