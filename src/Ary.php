@@ -18,7 +18,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
      *
      * @var array
      */
-//    protected $items = [];
+    protected $items = [];
 
     /**
      * Create a new collection.
@@ -35,6 +35,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
         elseif (count($items) === 1) {
             $items = is_array($items[0]) ? $items[0] : $this->getArrayableItems($items[0]);
         }
+        $this->items = $items;
         parent::__construct($items);
     }
 
@@ -75,6 +76,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
 
     public function __set($name, $value)
     {
+        $this->items['name'] = $value;
         $this->offsetSet($name, $value);
     }
 
@@ -88,7 +90,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
     public function &get($key, $default = null)
     {
         if ($this->offsetExists($key)) {
-            return $this->getArrayCopy()[$key];
+            return $this->items[$key];
         }
         return $default;
     }
@@ -99,7 +101,7 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
      * @param  mixed $key
      * @return mixed
      */
-    public function offsetGet($key)
+    public function &offsetGet($key)
     {
         return $this->get($key);
     }
@@ -203,8 +205,5 @@ class Ary extends \ArrayObject implements \ArrayAccess, \Countable, \IteratorAgg
     public function search($value, $strict = false)
     {
         return array_search($value, $this->getArrayCopy(), $strict);
-
     }
-
-
 }

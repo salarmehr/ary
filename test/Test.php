@@ -99,6 +99,19 @@ class Test extends PHPUnit_Framework_TestCase
         return $method->invokeArgs($ary, $parameters);
     }
 
+    public function testAssignment()
+    {
+        $ary = new Ary();
+//        var_dump($ary);die();
+        $ary[] = 3;
+        $this->assertEquals($ary[0], 3);
+        $ary['x'] = ['z' => 'y'];
+        $this->assertEquals($ary['x']['z'], 'y');
+        $ary['x']['z'] = 'm';
+        $this->assertEquals($ary['x']['z'], 'm');
+
+    }
+
 //    public function testOffsetExists()
 //    {
 //        $parameters = array(7,8,9,4);
