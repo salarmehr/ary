@@ -10,7 +10,14 @@
 
 namespace Salarmehr;
 
-class Ary implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable
+use ArrayAccess;
+use ArrayIterator;
+use CachingIterator;
+use Countable;
+use IteratorAggregate;
+use JsonSerializable;
+
+class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
 
     /**
@@ -75,7 +82,6 @@ class Ary implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializ
 
     public function __set($name, $value)
     {
-        $this->items['name'] = $value;
         $this->offsetSet($name, $value);
     }
 
@@ -172,7 +178,7 @@ class Ary implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializ
      */
     public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
     {
-        return new CachingIterator($this->getIterator(), $flags);
+        return new \CachingIterator($this->getIterator(), $flags);
     }
 
     /**
