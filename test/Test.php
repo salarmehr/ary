@@ -105,7 +105,13 @@ class Test extends PHPUnit_Framework_TestCase
 //        var_dump($ary);die();
         $ary[] = 3;
         $this->assertEquals($ary[0], 3);
+        $this->assertEquals($ary->{0}, 3);
+        $this->assertTrue($ary->has(0));
         $ary['x'] = ['z' => 'y'];
+        $ary['foo'] = 'bar';
+        $this->assertEquals($ary['foo'], 'bar');
+        $this->assertEquals($ary->foo, 'bar');
+        $this->assertTrue($ary->has('foo'));
         $this->assertEquals($ary['x']['z'], 'y');
         $ary['x']['z'] = 'm';
         $this->assertEquals($ary['x']['z'], 'm');
