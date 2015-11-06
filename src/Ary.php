@@ -146,7 +146,7 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      */
     public function jsonSerialize()
     {
-        return $this->jsonSerialize();
+        return $this->all();
     }
 
     /**

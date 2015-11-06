@@ -47,6 +47,7 @@ class Test extends PHPUnit_Framework_TestCase
     {
         return array(
             array('', ''),
+            array(null, null),
             array(['ali', 'reza', 'mohammad'], ['ali', 'reza', 'mohammad']),
             array(['name' => 'ali', 'lastname' => 'reza', 'age' => 30], ['name' => 'ali', 'lastname' => 'reza', 'age' => 30]),
             array((object)['name' => 'ali', 'lastname' => 'reza', 'age' => 30], (object)['name' => 'ali', 'lastname' => 'reza', 'age' => 30]),
@@ -116,6 +117,14 @@ class Test extends PHPUnit_Framework_TestCase
         $ary['x']['z'] = 'm';
         $this->assertEquals($ary['x']['z'], 'm');
 
+    }
+
+    /**
+     * @dataProvider various
+     */
+    public function testJsonSerialize($original, $expected)
+    {
+        $this->assertEquals(json_encode(new Ary($original)), json_encode((array)$original));
     }
 
 //    public function testOffsetExists()
