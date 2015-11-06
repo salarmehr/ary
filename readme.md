@@ -5,11 +5,12 @@ Are you tired from casting objects and arrays to each other? Don't do that anymo
 1. You can access array items using `->` or `['']` syntax.
 2. You will get `null` if an index does not exists (instead of a nasty notification!)
 3. You can specify a default value for missing indexes.
-4. It extends PHP ArrayObject class. So you can use its methods. 
 
 * The class (`Ary()`) requires PHP 5.4 or newer.
 * The helper function (`ary()`) requires PHP 5.6 or newer. 
 
+Examples
+--------
 ~~~~~
 // instantiation
 $ary = new Ary();
@@ -41,3 +42,6 @@ Installation
     composer require salarmehr/ary
     
     
+Licence
+=======
+MIT
