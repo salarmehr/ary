@@ -202,17 +202,6 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     }
 
     /**
-     * Unset the item at a given offset.
-     *
-     * @param  string $key
-     * @return void
-     */
-    public function offsetUnset($key)
-    {
-        unset($this->items[$key]);
-    }
-
-    /**
      * Convert the collection to its string representation.
      *
      * @return string
@@ -281,5 +270,26 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     public function search($value, $strict = false)
     {
         return array_search($value, $this->items, $strict);
+    }
+
+    public function ary($item)
+    {
+        return new ary($this->get($item));
+    }
+
+    public function __unset($key)
+    {
+        $this->offsetUnset($key);
+    }
+
+    /**
+     * Unset the item at a given offset.
+     *
+     * @param  string $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->items[$key]);
     }
 }

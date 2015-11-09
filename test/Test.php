@@ -127,6 +127,17 @@ class Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(json_encode(new Ary($original)), json_encode((array)$original));
     }
 
+    /**
+     * @dataProvider various
+     */
+    public function ary()
+    {
+        $test = ['x' => ['xx' => 'xxx']];
+        $ary = new Ary($test);
+        $this->assertEquals(ary($test)->x['xx'], $ary->ary('x')->xx);
+        $this->assertEquals(ary(ary($test)->x['xx']), $ary->ary('x')->ary('xx'));
+    }
+
 //    public function testOffsetExists()
 //    {
 //        $parameters = array(7,8,9,4);
