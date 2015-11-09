@@ -282,4 +282,9 @@ class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
     {
         return array_search($value, $this->items, $strict);
     }
+
+    public function ary($item)
+    {
+        return new ary($this->get($item));
+    }
 }
