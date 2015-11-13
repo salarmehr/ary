@@ -8,11 +8,12 @@ Ary is a light class/function that makes accessing array items more convenient.
 2. You will get `null` if an index does not exists (instead of a nasty notification!)
 3. You can specify a default value for missing indexes.
 4. You can set/get a value within a deeply nested array using "dot" notation.
+5. A bunch of really handy method: `merge`,`only`,`search`,`toObject`, ... 
 
 Examples
 --------
 ~~~~~
-// instantiation
+// Instantiation
 $ary = new Ary();
 // or simply
 $ary = ary();
@@ -35,6 +36,7 @@ $ary->all(); // returns the simple php array;
 // behave similar to regular arrays
 count($ary); //returns 3
 unset($ary[0]); 
+json_encode($ary);
 
 // deep assignment/retrieval
 $ary = ary(['products' => ['desk' => ['price' => 100]]]);
