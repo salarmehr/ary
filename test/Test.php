@@ -61,6 +61,9 @@ class Test extends PHPUnit_Framework_TestCase
     {
         $ary = new Ary();
         $this->assertEquals($ary[0], null);
+
+        $ary = new Ary(['x' => ['xx' => ['m' => 'xxx']]]);
+        $this->assertEquals($ary->get('x.xx.m'), 'xxx');
     }
 
 

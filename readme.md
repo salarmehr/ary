@@ -33,6 +33,11 @@ $ary['newItem']=20;
 
 count($ary); //returns 3
 $ary->all(); // returns simple php array;
+
+// deep assignment/retrieval
+$ary = ary(['products' => ['desk' => ['price' => 100]]]);
+$value = $ary['products.desk.price']; //100
+$ary['production.table.weight']=200; 
 ~~~~~~
 
 
