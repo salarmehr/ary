@@ -9,6 +9,7 @@
 
 use \Salarmehr\Ary;
 
+require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../src/Ary.php';
 
 class Test extends PHPUnit_Framework_TestCase

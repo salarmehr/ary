@@ -7,15 +7,24 @@
 
 use Salarmehr\Ary;
 
-if (!function_exists('ary')) {
+if (!function_exists('ary') && phpversion()) {
 
-    /**
-     * @param mixed $items,...
-     * @return Ary
-     */
-    function ary()
+
+    function parse_version($version)
     {
-        return new Ary(...func_get_args());
+        $version = explode('.', $version);
+        return $version[0] * 10000 + $version[1] * 100 + $version[2];
+    }
+
+    if (!defined('ary') && parse_version(PHP_VERSION) > parse_version('5.6.0')) {
+        /**
+         * @param mixed $items,...
+         * @return Ary
+         */
+        function ary()
+        {
+            return new Ary(...func_get_args());
+        }
     }
 }
 

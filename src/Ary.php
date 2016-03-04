@@ -14,10 +14,11 @@ use ArrayAccess;
 use ArrayIterator;
 use CachingIterator;
 use Countable;
+use Illuminate\Support\Collection;
 use IteratorAggregate;
 use JsonSerializable;
 
-class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+class Ary extends Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
 
     /**
