@@ -1,14 +1,15 @@
 Ary 
 ===
 
-Are you tired from casting objects and arrays to each other or are bored using is `isset`? Don't do those anymore! 
-Ary is a light class/function that makes accessing array items more convenient.   
+Are you tired from casting objects and arrays to each other or are bored using `isset`? Don't do those anymore! 
+Ary is a light class (and a helper function) that makes working with array items more convenient.   
 
 1. You can access array items using `->` or `['']` syntax.
 2. You will get `null` if an index does not exists (instead of a nasty notification!)
 3. You can specify a default value for missing indexes.
 4. You can set/get a value within a deeply nested array using "dot" notation.
 5. A bunch of really handy methods: `merge`, `only`, `search`, `toObject`, ... 
+6. (new) It extends `Illuminate\Support\Collection` class so all of its methods are available (https://laravel.com/docs/master/eloquent-collections)
 
 Examples
 --------
@@ -33,7 +34,7 @@ $foo = $ary['x'];
 $missed = $ary->get('missed', 'Default value');
 $ary->all(); // returns the simple php array;
 
-// behave similar to regular arrays
+// works similar to regular php arrays
 count($ary); //returns 3
 unset($ary[0]); 
 json_encode($ary);
