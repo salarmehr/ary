@@ -1,8 +1,8 @@
 Ary 
 ===
 
-Are you tired from casting objects and arrays to each other or are bored using `isset`? Don't do those anymore! 
-Ary is a light class (and a helper function) that makes working with array items more convenient.   
+Are you tired from casting objects and arrays to each other or are bored using is `isset`? Don't do those anymore! 
+Ary is a light class/function that makes accessing array items more convenient.   
 
 1. You can access array items using `->` or `['']` syntax.
 2. You will get `null` if an index does not exists (instead of a nasty notification!)
@@ -34,7 +34,7 @@ $foo = $ary['x'];
 $missed = $ary->get('missed', 'Default value');
 $ary->all(); // returns the simple php array;
 
-// works similar to regular php arrays
+// behave similar to regular arrays
 count($ary); //returns 3
 unset($ary[0]); 
 json_encode($ary);
