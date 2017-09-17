@@ -13,7 +13,7 @@ if (!function_exists('ary') && phpversion()) {
     function parse_version($version)
     {
         $version = explode('.', $version);
-        return $version[0] * 10000 + $version[1] * 100 + $version[2];
+        return $version[0] * 10000 + $version[1] * 100 + (int) $version[2];
     }
 
     if (!defined('ary') && parse_version(PHP_VERSION) > parse_version('5.6.0')) {

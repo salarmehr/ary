@@ -10,139 +10,160 @@
 
 namespace Salarmehr;
 
-use ArrayAccess;
-use Countable;
 use Illuminate\Support\Collection;
-use IteratorAggregate;
-use JsonSerializable;
 
-class Ary extends Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+class Ary extends Collection
 {
-    /**
-     * Create a new collection.
-     *
-     * @param mixed $items
-     */
+  /**
+   * Create a new ary.
+   *
+   * @param mixed $items
+   */
 
-    public function __construct()
-    {
-        $items = func_get_args();
-        if (count($items) === 0) {
-            $items = [];
-        }
-        elseif (count($items) === 1) {
-            $items = is_array($items[0]) ? $items[0] : $this->getArrayableItems($items[0]);
-        }
-        $this->items = $items;
+  public function __construct()
+  {
+    $items = func_get_args();
+    if (count($items) === 0) {
+      $items = [];
+    }
+    elseif (count($items) === 1) {
+      $items = is_array($items[0]) ? $items[0] : $this->getArrayableItems($items[0]);
+    }
+    $this->items = $items;
+  }
+
+  public function &__get($item)
+  {
+    return $this->get($item);
+  }
+
+  public function __set($name, $value)
+  {
+    $this->offsetSet($name, $value);
+  }
+
+  /**
+   * Get an item from the ary by key.
+   *
+   * @param  mixed $key
+   * @param  mixed $default
+   * @return mixed
+   */
+  public function &get($key, $default = null)
+  {
+    if ($this->offsetExists($key)) {
+      return $this->items[$key];
     }
 
-    public function &__get($item)
-    {
-        return $this->get($item);
+    $array = $this->items;
+    foreach (explode('.', $key) as $segment) {
+      if (!is_array($array) || !array_key_exists($segment, $array)) {
+        return $default;
+      }
+
+      $array = $array[$segment];
+    }
+    return $array;
+  }
+
+  /**
+   * Set the item at a given offset.
+   *
+   * @param  mixed $key
+   * @param  mixed $value
+   * @return void
+   */
+  public function offsetSet($key, $value)
+  {
+    if (is_null($key)) {
+      $this->items[] = $value;
+      return;
     }
 
-    public function __set($name, $value)
-    {
-        $this->offsetSet($name, $value);
+    $keys = explode('.', $key);
+    $array =& $this->items;
+    while (count($keys) > 1) {
+      $key = array_shift($keys);
+
+      // If the key doesn't exist at this depth, we will just create an empty array
+      // to hold the next value, allowing us to create the arrays to hold final
+      // values at the correct depth. Then we'll keep digging into the array.
+      if (!isset($array[$key]) || !is_array($array[$key])) {
+        $array[$key] = [];
+      }
+
+      $array = &$array[$key];
     }
 
-    /**
-     * Get an item from the collection by key.
-     *
-     * @param  mixed $key
-     * @param  mixed $default
-     * @return mixed
-     */
-    public function &get($key, $default = null)
-    {
-        if ($this->offsetExists($key)) {
-            return $this->items[$key];
-        }
+    $array[array_shift($keys)] = $value;
+    return;
+  }
 
-        $array = $this->items;
-        foreach (explode('.', $key) as $segment) {
-            if (!is_array($array) || !array_key_exists($segment, $array)) {
-                return $default;
-            }
+  /**
+   * Get an item at a given offset.
+   *
+   * @param  mixed $key
+   * @return mixed
+   */
+  public function &offsetGet($key)
+  {
+    return $this->get($key);
+  }
 
-            $array = $array[$segment];
-        }
-        return $array;
-    }
+  public function __isset($name)
+  {
+    return $this->has($name);
+  }
 
-    /**
-     * Set the item at a given offset.
-     *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function offsetSet($key, $value)
-    {
-        if (is_null($key)) {
-            $this->items[] = $value;
-            return;
-        }
+  /**
+   * Get the ary of items as a plain object.
+   *
+   * @return object
+   */
+  public function toObject()
+  {
+    return (object)$this->all();
+  }
 
-//        $this->items[$key] = $value;
+  /**
+   * Return a subset of current ary as a new ary
+   * @param $item
+   * @return Ary
+   */
+  public function ary($item)
+  {
+    return new self($this->get($item));
+  }
 
-        $keys = explode('.', $key);
-        $array =& $this->items;
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
+  public function __unset($key)
+  {
+    $this->offsetUnset($key);
+  }
 
-            // If the key doesn't exist at this depth, we will just create an empty array
-            // to hold the next value, allowing us to create the arrays to hold final
-            // values at the correct depth. Then we'll keep digging into the array.
-            if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = [];
-            }
+  #region extra helpers
 
-            $array = &$array[$key];
-        }
+  /**
+   * Replaces elements from passed arrays into the collection
+   *
+   * @param  mixed $items
+   * @return static
+   * @see http://php.net/manual/en/function.array-replace-recursive.php
+   */
+  public function replace($items)
+  {
+    return new static(array_replace($this->items, $this->getArrayableItems($items)));
+  }
 
-        $array[array_shift($keys)] = $value;
-        return;
-    }
-
-    /**
-     * Get an item at a given offset.
-     *
-     * @param  mixed $key
-     * @return mixed
-     */
-    public function &offsetGet($key)
-    {
-        return $this->get($key);
-    }
-
-    public function __isset($name)
-    {
-        return $this->has($name);
-    }
-
-    /**
-     * Get the collection of items as a plain object.
-     *
-     * @return object
-     */
-    public function toObject()
-    {
-        return (object)$this->all();
-    }
-
-    /**
-     * Return a subset of current ary as a new ary
-     * @param $item
-     * @return Ary
-     */
-    public function ary($item)
-    {
-        return new ary($this->get($item));
-    }
-
-    public function __unset($key)
-    {
-        $this->offsetUnset($key);
-    }
+  /**
+   * Replaces elements from passed arrays into the collection recursively
+   *
+   * @param  mixed $items
+   * @return static
+   * @see http://php.net/manual/en/function.array-replace-recursive.php
+   */
+  public function replaceRecursively($items)
+  {
+    return new static(array_replace_recursive($this->items, $this->getArrayableItems($items)));
+  }
+  #endrtiong
 }
