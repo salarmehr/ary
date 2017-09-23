@@ -1,11 +1,6 @@
 <?php
 /**
  * Created by Reza Salarmehr.
- *
- * Some methods are from Laravel source code.
- *
- * Date: 18/09/2015
- * Time: 22:37
  */
 
 namespace Salarmehr;
@@ -165,5 +160,5 @@ class Ary extends Collection
   {
     return new static(array_replace_recursive($this->items, $this->getArrayableItems($items)));
   }
-  #endrtiong
+  #endregion
 }
