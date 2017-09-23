@@ -160,5 +160,31 @@ class Ary extends Collection
   {
     return new static(array_replace_recursive($this->items, $this->getArrayableItems($items)));
   }
+
+  /**
+   * Get the items with the specified keys.
+   *
+   * @param  mixed $keys
+   * @param bool   $returnArray
+   * @return static
+   */
+  public function only($keys, $returnArray = false)
+  {
+    $result = parent::only($keys);
+    return $returnArray ? $result->toArray() : $result;
+  }
+
+  /**
+   * Get all items except for those with the specified keys.
+   *
+   * @param  mixed $keys
+   * @return static
+   */
+  public function except($keys, $returnArray = false)
+  {
+    $result = parent::except($keys);
+    return $returnArray ? $result->toArray() : $result;
+  }
+
   #endregion
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: samaneh
- * Date: 2015/10/15
- * Time: 11:12 AM
- */
-
 use \Salarmehr\Ary;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -40,7 +33,7 @@ class Test extends PHPUnit\Framework\TestCase
 
   public function testAll($originalary, $expectedary)
   {
-    $ary = new Ary();
+    $ary = ary($originalary);
     $ary->all();
     $this->assertEquals($expectedary, $originalary);
   }
@@ -55,6 +48,7 @@ class Test extends PHPUnit\Framework\TestCase
       array((object)['name' => 'ali', 'lastname' => 'reza', 'age' => 30], (object)['name' => 'ali', 'lastname' => 'reza', 'age' => 30]),
       array(['ali', 'reza', 'mohammad'], ['ali', 'reza', 'mohammad']),
       array([1, 2, 3, 4], [1, 2, 3, 4]),
+      array(['x'=>'y'], ['x'=>'y']),
     );
   }
 
@@ -66,6 +60,12 @@ class Test extends PHPUnit\Framework\TestCase
 
     $ary = new Ary(['x' => ['xx' => ['m' => 'xxx']]]);
     $this->assertEquals($ary->get('x.xx.m'), 'xxx');
+  }
+
+  public function testAryHelper()
+  {
+    $a=ary(['x'=>2,'y'=>22]);
+    $this->assertEquals($a['x'],2);
   }
 
 
@@ -108,7 +108,6 @@ class Test extends PHPUnit\Framework\TestCase
   public function testAssignment()
   {
     $ary = new Ary();
-//        var_dump($ary);die();
     $ary[] = 3;
     $this->assertEquals($ary[0], 3);
     $this->assertEquals($ary->{0}, 3);
@@ -157,6 +156,20 @@ class Test extends PHPUnit\Framework\TestCase
     $expect = ['citrus' => ['pineapple'], 'berries' => ['blueberry', 'raspberry']];
     $c = new Ary($base);
     $this->assertEquals($expect, $c->replaceRecursively(new Ary($replacements))->all());
+  }
+
+  public function testOnly()
+  {
+    $c = new Ary(['foo' => 'x', 'bar' => 'y']);
+    $this->assertEquals(['bar' => 'y'], $c->only(['bar'], true));
+    $this->assertEquals(['bar' => 'y'], $c->only(['bar'])->all());
+  }
+
+  public function testExcept()
+  {
+    $c = new Ary(['foo' => 'x', 'bar' => 'y']);
+    $this->assertEquals(['foo' => 'x'], $c->except(['bar'], true));
+    $this->assertEquals(['foo' => 'x'], $c->except(['bar'])->all());
   }
 
 //    public function testOffsetExists()

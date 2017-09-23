@@ -5,16 +5,13 @@
 
 use Salarmehr\Ary;
 
-if (!function_exists('ary') && phpversion()) {
-  if (!defined('ary') && PHP_VERSION_ID > 50600) {
+if (!function_exists('ary') && defined('PHP_VERSION_ID') && PHP_VERSION_ID > 50600) {
     /**
      * @param array $items
      * @return Ary
      */
     function ary(...$items)
     {
-      return new Ary($items);
+      return new Ary(...$items);
     }
-  }
 }
-
