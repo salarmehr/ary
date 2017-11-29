@@ -41,7 +41,7 @@ $foo = $ary['x'];
 $missed = $ary->get('missed', 'Default value');
 $ary->all(); // returns the simple php array;
 
-// behaive as regular arrays
+// works as regular arrays
 count($ary); //returns 3
 unset($ary[0]); 
 json_encode($ary);
