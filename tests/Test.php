@@ -2,7 +2,7 @@
 
 use \Salarmehr\Ary;
 
-require __DIR__ . '/../vendor/autoload.php';
+// require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../src/Ary.php';
 
 class Test extends PHPUnit\Framework\TestCase
@@ -34,8 +34,11 @@ class Test extends PHPUnit\Framework\TestCase
   public function testAll($originalary, $expectedary)
   {
     $ary = ary($originalary);
+    
     $ary->all();
+    
     $this->assertEquals($expectedary, $originalary);
+    
   }
 
   public function various()
@@ -172,12 +175,55 @@ class Test extends PHPUnit\Framework\TestCase
     $this->assertEquals(['foo' => 'x'], $c->except(['bar'])->all());
   }
 
-//    public function testOffsetExists()
-//    {
-//        $parameters = array(7,8,9,4);
-//        $ary= new Ary($parameters);
-//        $key= $ary[1];
-//        $result=$ary->offsetExists($key);
-//        $this->assert($result);
-//    }
+
+
+
+
+
+   public function testOffsetExists()
+   {
+
+      $parameters = array(4,5,2,0,1,3);
+      $ary= new Ary($parameters);
+
+      for($i=0 ; $i<=count($ary) ; $i++){
+          $key = [];
+          $key[$i] = $ary->{$i};
+          if($i < count($ary)){
+            $resultTrue=$ary->offsetExists($key[$i]);
+            $this->assertTrue($resultTrue);
+          }
+          else{
+            $resultFalse = $ary->offsetExists($key[$i]);
+            $this->assertFalse($resultFalse);
+          }
+      }
+   }
+
+
+   public function testToObject(){
+
+      $name1 = 'mehdi';
+      $height1 = 181;
+
+      $name2 = 'ehsan';
+      $height2 = 176;
+
+      $persons = [];
+      $persons[$name1] = $height1;
+      $persons[$name2] = $height2;
+
+      $ary= new Ary($persons);
+      $objected = $ary->toObject();
+
+
+      $this->assertInternalType("string" , $name1);
+      $this->assertInternalType("array"  , $persons);
+      $this->assertInternalType("object" , $ary);
+      $this->assertInternalType("object", $objected);
+
+   }
+
+      
+
 }
