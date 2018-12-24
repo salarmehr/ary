@@ -61,8 +61,8 @@ or use Composer:
     
     composer require salarmehr/ary
     
-* The class (`Ary()`) requires PHP 5.4 or above.
-* The helper function (`ary()`) requires PHP 5.6 or above. 
+* The `Ary()` requires PHP 5.4 or above.
+* The `ary()` helper function requires PHP 5.6 or above. 
     
 Licence
 =======

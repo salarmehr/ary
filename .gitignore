@@ -2,3 +2,7 @@
 /lab/
 composer.lock
 .idea
+
+**/temp/
+**/temp.*
+**/*.temp.*

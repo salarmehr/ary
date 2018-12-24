@@ -174,12 +174,13 @@ class Ary extends Collection
     return $returnArray ? $result->toArray() : $result;
   }
 
-  /**
-   * Get all items except for those with the specified keys.
-   *
-   * @param  mixed $keys
-   * @return static
-   */
+    /**
+     * Get all items except for those with the specified keys.
+     *
+     * @param  mixed $keys
+     * @param bool $returnArray
+     * @return static
+     */
   public function except($keys, $returnArray = false)
   {
     $result = parent::except($keys);
