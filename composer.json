@@ -10,9 +10,13 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=8.0",
     "illuminate/support": "*"
   },
+  "require-dev": {
+    "php": ">=8.0",
+    "illuminate/support": "*"
+	},
   "autoload": {
     "psr-4": {
       "Salarmehr\\": "src/"
@@ -20,8 +24,5 @@
     "files": [
       "src/helper.php"
     ]
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^6.3"
   }
 }

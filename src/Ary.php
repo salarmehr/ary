@@ -64,11 +64,11 @@ class Ary extends Collection
   /**
    * Set the item at a given offset.
    *
-   * @param  mixed $key
-   * @param  mixed $value
+   * @param  TKey|null  $key
+   * @param  TValue  $value
    * @return void
    */
-  public function offsetSet($key, $value)
+  public function offsetSet($key, $value): void
   {
     if (is_null($key)) {
       $this->items[] = $value;
@@ -100,9 +100,13 @@ class Ary extends Collection
    * @param  mixed $key
    * @return mixed
    */
-  public function &offsetGet($key)
+  // public function &offsetGet($key)
+  // {
+  //   return $this->get($key);
+  // }
+  public function offsetGet($key): mixed
   {
-    return $this->get($key);
+        return $this->get($key);
   }
 
   public function __isset($name)
