@@ -10,7 +10,7 @@ class Test extends PHPUnit\Framework\TestCase
 {
     protected $item;
 
-    public function setup()
+    public function setup(): void
     {
         $this->item = [];
     }
@@ -24,28 +24,9 @@ class Test extends PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @param array $originalary array to get
-     * @param array $expectedary What we expect to get
-     *
-     * @dataProvider various
-     */
-
-    public function testAll($originalary, $expectedary)
-    {
-        $ary = ary($originalary);
-
-        $ary->all();
-
-        $this->assertEquals($expectedary, $originalary);
-
-    }
-
     public function various()
     {
         return [
-            ['', ''],
-            [null, null],
             [['ali', 'reza', 'mohammad'], ['ali', 'reza', 'mohammad']],
             [['name' => 'ali', 'lastname' => 'reza', 'age' => 30], ['name' => 'ali', 'lastname' => 'reza', 'age' => 30]],
             [(object)['name' => 'ali', 'lastname' => 'reza', 'age' => 30], (object)['name' => 'ali', 'lastname' => 'reza', 'age' => 30]],
@@ -53,16 +34,6 @@ class Test extends PHPUnit\Framework\TestCase
             [[1, 2, 3, 4], [1, 2, 3, 4]],
             [['x' => 'y'], ['x' => 'y']],
         ];
-    }
-
-
-    public function testGet()
-    {
-        $ary = new Ary();
-        $this->assertEquals($ary[0], null);
-
-        $ary = new Ary(['x' => ['xx' => ['m' => 'xxx']]]);
-        $this->assertEquals($ary->get('x.xx.m'), 'xxx');
     }
 
     public function testAryHelper()

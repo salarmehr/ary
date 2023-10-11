@@ -1,27 +1,24 @@
 {
   "name": "salarmehr/ary",
   "description": "A php array/stdClass alternative to store configs, options and more.",
-  "type": "Utility",
+  "type": "utility",
   "license": "MIT",
   "authors": [
     {
-      "name": "Reza Salarmehr",
-      "email": "salarmehr@gmail.com"
+      "name": "Aiden Adrian",
+      "email": "ary@aidenadrian.com"
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "illuminate/support": "*"
+    "php": ">=8.0",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
       "Salarmehr\\": "src/"
-    },
-    "files": [
-      "src/helper.php"
-    ]
+    }
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.3"
+    "phpunit/phpunit": "^8.0.0"
   }
 }
