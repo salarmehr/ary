@@ -10,7 +10,7 @@ class Test extends PHPUnit\Framework\TestCase
 {
     protected $item;
 
-    public function setup()
+    protected function setUp(): void
     {
         $this->item = [];
     }
@@ -78,7 +78,6 @@ class Test extends PHPUnit\Framework\TestCase
     public function testCount($objects)
     {
         $ary = new Ary($objects);
-        var_dump($objects);
         $expected = count($objects);
         $num = count($ary);
         $this->assertEquals($expected, $num);
@@ -213,10 +212,10 @@ class Test extends PHPUnit\Framework\TestCase
         $objected = $ary->toObject();
 
 
-        $this->assertInternalType("string", $name1);
-        $this->assertInternalType("array", $persons);
-        $this->assertInternalType("object", $ary);
-        $this->assertInternalType("object", $objected);
+        $this->assertIsString($name1);
+        $this->assertIsArray($persons);
+        $this->assertIsObject($ary);
+        $this->assertIsObject($objected);
 
     }
 }

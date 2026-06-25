@@ -6,3 +6,4 @@ composer.lock
 **/temp/
 **/temp.*
 **/*.temp.*
+.phpunit.result.cache

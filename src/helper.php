@@ -5,7 +5,7 @@
 
 use Salarmehr\Ary;
 
-if (!function_exists('ary') && defined('PHP_VERSION_ID') && PHP_VERSION_ID > 50600) {
+if (!function_exists('ary')) {
     /**
      * @param array $items
      * @return Ary
