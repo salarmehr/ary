@@ -5,10 +5,21 @@
 
 namespace Salarmehr;
 
-use Illuminate\Support\Collection;
+use ArrayAccess;
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use JsonSerializable;
 
-class Ary extends Collection
+class Ary implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
+  /**
+   * The items contained in the ary.
+   *
+   * @var array
+   */
+  protected $items = [];
+
   /**
    * Create a new ary.
    *
@@ -62,12 +73,54 @@ class Ary extends Collection
   }
 
   /**
+   * Determine if the given key(s) exist in the ary.
+   *
+   * @param  mixed $key
+   * @return bool
+   */
+  public function has($key)
+  {
+    $keys = is_array($key) ? $key : func_get_args();
+
+    foreach ($keys as $value) {
+      if (!$this->offsetExists($value)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Get all of the items in the ary.
+   *
+   * @return array
+   */
+  public function all()
+  {
+    return $this->items;
+  }
+
+  /**
+   * Determine if an item exists at a given offset.
+   *
+   * @param  mixed $key
+   * @return bool
+   */
+  #[\ReturnTypeWillChange]
+  public function offsetExists($key)
+  {
+    return isset($this->items[$key]);
+  }
+
+  /**
    * Set the item at a given offset.
    *
    * @param  mixed $key
    * @param  mixed $value
    * @return void
    */
+  #[\ReturnTypeWillChange]
   public function offsetSet($key, $value)
   {
     if (is_null($key)) {
@@ -100,14 +153,80 @@ class Ary extends Collection
    * @param  mixed $key
    * @return mixed
    */
+  #[\ReturnTypeWillChange]
   public function &offsetGet($key)
   {
     return $this->get($key);
   }
 
+  /**
+   * Unset the item at a given offset.
+   *
+   * @param  mixed $key
+   * @return void
+   */
+  #[\ReturnTypeWillChange]
+  public function offsetUnset($key)
+  {
+    unset($this->items[$key]);
+  }
+
   public function __isset($name)
   {
     return $this->has($name);
+  }
+
+  /**
+   * Count the number of items in the ary.
+   *
+   * @return int
+   */
+  #[\ReturnTypeWillChange]
+  public function count()
+  {
+    return count($this->items);
+  }
+
+  /**
+   * Get an iterator for the items.
+   *
+   * @return \ArrayIterator
+   */
+  #[\ReturnTypeWillChange]
+  public function getIterator()
+  {
+    return new ArrayIterator($this->items);
+  }
+
+  /**
+   * Convert the ary into something JSON serializable.
+   *
+   * @return array
+   */
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize()
+  {
+    return array_map(function ($value) {
+      if ($value instanceof JsonSerializable) {
+        return $value->jsonSerialize();
+      }
+      if ($value instanceof self) {
+        return $value->toArray();
+      }
+      return $value;
+    }, $this->items);
+  }
+
+  /**
+   * Get the ary of items as a plain array.
+   *
+   * @return array
+   */
+  public function toArray()
+  {
+    return array_map(function ($value) {
+      return $value instanceof self ? $value->toArray() : $value;
+    }, $this->items);
   }
 
   /**
@@ -135,14 +254,37 @@ class Ary extends Collection
     $this->offsetUnset($key);
   }
 
+  /**
+   * Results array of items from another ary or arrayable value.
+   *
+   * @param  mixed $items
+   * @return array
+   */
+  protected function getArrayableItems($items)
+  {
+    if (is_array($items)) {
+      return $items;
+    }
+    if ($items instanceof self) {
+      return $items->all();
+    }
+    if ($items instanceof JsonSerializable) {
+      return (array)$items->jsonSerialize();
+    }
+    if ($items instanceof \Traversable) {
+      return iterator_to_array($items);
+    }
+    return (array)$items;
+  }
+
   #region extra helpers
 
   /**
-   * Replaces elements from passed arrays into the collection
+   * Replaces elements from passed arrays into the ary
    *
    * @param  mixed $items
    * @return static
-   * @see http://php.net/manual/en/function.array-replace-recursive.php
+   * @see http://php.net/manual/en/function.array-replace.php
    */
   public function replace($items)
   {
@@ -150,7 +292,7 @@ class Ary extends Collection
   }
 
   /**
-   * Replaces elements from passed arrays into the collection recursively
+   * Replaces elements from passed arrays into the ary recursively
    *
    * @param  mixed $items
    * @return static
@@ -166,11 +308,11 @@ class Ary extends Collection
    *
    * @param  mixed $keys
    * @param bool   $returnArray
-   * @return static
+   * @return static|array
    */
   public function only($keys, $returnArray = false)
   {
-    $result = parent::only($keys);
+    $result = new static(array_intersect_key($this->items, array_flip((array)$keys)));
     return $returnArray ? $result->toArray() : $result;
   }
 
@@ -179,11 +321,11 @@ class Ary extends Collection
      *
      * @param  mixed $keys
      * @param bool $returnArray
-     * @return static
+     * @return static|array
      */
   public function except($keys, $returnArray = false)
   {
-    $result = parent::except($keys);
+    $result = new static(array_diff_key($this->items, array_flip((array)$keys)));
     return $returnArray ? $result->toArray() : $result;
   }
 
